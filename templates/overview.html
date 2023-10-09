@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% block title %}
+    <title>Hogeschool Checkin</title>
+{% endblock %}
+{% block content %}
+
+
+<!-- inspired by 'blackgirlbytes' on github-->
+<body>
+    <div id="container">
+        <header>
+        <nav>
+            <ul class="navibar">
+                <li> Monday</li>
+                <li> Tuesday</li>
+                <li> Wednesday</li>
+                <li> Thursday</li>
+                <li> Friday</li>
+            </ul>
+        </nav>
+        </header>
+        <input id="enter" type="text" name="" value="" placeholder="Zoek student">        
+        <button id="zoeken" type="button" name="button">Zoeken</button>
+        <button id="aanwezig" type="button" name="button">Aanwezig</button>
+        <button id="afwezig" type="button" name="button">Afwezig</button>
+
+    <section class="secAanwezig">
+        <h2>Aanwezig</h2>
+
+        <ol class="aanwezig-lijst"></ol>
+            <li> Lucas Onclin</li>
+            <li> Falco Zandboer</li>
+            <li> Mattias Suijker</li>
+         
+    </section>
+
+<section class="secAfwezig">
+    <h2>Afwezig</h2>
+    
+    <ol class="afwezig-lijst"></ol>
+    <li> Lucas Onclin</li>
+    <li> Falco Zandboer</li>
+    <li> Mattias Suijker</li>
+</section>
+
+
+</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script type="text/javascript" src="overview.js"></script>
+
+
+</body>
+{% endblock %}
+

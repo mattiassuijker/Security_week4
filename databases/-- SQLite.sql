@@ -1,0 +1,18 @@
+-- SQLite
+-- INSERT INTO class(class_shorthand, class_name) VALUES ('EFPA1','Pabo');
+-- CREATE TABLE attendance (
+-- 	student_number INTEGER NOT NULL,
+-- 	meeting_id INTEGER NOT NULL,
+-- 	present BOLEAN NOT NULL,
+-- 	absence_reason varchar(50),
+-- 	FOREIGN KEY(student_number) REFERENCES student(student_number),
+--     FOREIGN KEY(meeting_id) REFERENCES meeting(meeting_id)
+-- );
+-- DELETE FROM attendance WHERE  present = 1;
+-- INSERT INTO meeting_assignment (meeting_assignment_id, meeting_id, student_id, teacher_id)
+-- VALUES 
+--     (1, 1, 1, 1),
+--     (2, 1, 2, 1),
+--     (3, 1, 4, 1),
+--     (4, 2, 1, 1),
+--     (5, 2, 2, 1);

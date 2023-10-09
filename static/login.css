@@ -1,0 +1,19 @@
+.main
+{
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    position: relative;
+    padding-bottom: 30px;
+    -webkit-flex-grow: 1;
+    flex-grow: 1;
+}
+
+.error{
+    margin: 0 auto;
+    text-align: center;
+    padding: 0.4rem;
+    font-weight: bold;
+    color: red;
+}

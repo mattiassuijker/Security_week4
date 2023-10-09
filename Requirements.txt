@@ -1,0 +1,4 @@
+pi
+passlib
+Flask
+pip install qrcode

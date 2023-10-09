@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %}
+	<title>Hogeschool Checkin</title>
+{% endblock %}
+{% block content %}
+    <h1>QR Code</h1>
+    <div class="qr_code""></div>
+    <button onclick="goToLink()">Checkin</button>
+
+    <script>
+        function goToLink(id) {
+        // window.location.href = "http://127.0.0.1:5000/";
+        var id = new URLSearchParams(window.location.search).get("id");
+            window.location.href = "/attendees?id=" + id;
+        }
+    </script>
+    <img src="static/images/qr_code.png">
+    </div>
+{% endblock %}

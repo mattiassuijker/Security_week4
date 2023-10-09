@@ -1,0 +1,450 @@
+{% extends "layout.html" %}
+{% block title %}
+<title>Hogeschool Checkin</title>
+{% endblock %}
+{% block content %}
+
+
+
+<div id="container">
+    <header>
+        <nav>
+            <ul class="navibar">
+                <li> 
+                    <form id="nederlands_form">
+                        <input type="submit" id="nederlands_button" class="my-button" value="Nederlands">
+                    </form></li>
+
+                <li> 
+                    <form id="engels_form">
+                        <input type="submit" id="engels_button" class="my-button" value="Engels">
+                    </form></li>
+                    
+                <li> 
+                    <form id="werkplaats_form">
+                        <input type="submit" id="werkplaats_button" class="my-button" value="Werkplaats">
+                    </form></li>
+
+                <li> 
+                    <form id="databases_form">
+                        <input type="submit" id="databases_button" class="my-button" value="Databases">
+                    </form></li>
+                    
+                <li> 
+                    <form id="professionelevorming_form">
+                        <input type="submit" id="professionelevorming_button" class="my-button" value="Professionele Vorming">
+                    </form></li>    
+            </ul>
+        </nav>
+    </header>
+    <input id="enter" type="text" name="" value="" placeholder="Zoek student">
+    <button id="aanwezig" type="button" name="button">Zoeken</button>
+
+<script>
+    var nederlands_form = document.getElementById("nederlands_form");
+    var engels_form = document.getElementById("engels_form");
+    var werkplaats_form = document.getElementById("werkplaats_form");
+    var databases_form = document.getElementById("databases_form");
+    var professionelevorming_form = document.getElementById("professionelevorming_form");
+    
+    
+
+
+    nederlands_form.addEventListener('submit', function(){
+        window.history.replaceState(null, '', 'http://127.0.0.1:81/overview/Nederlands?') 
+    }, false);
+    engels_form.addEventListener('submit', function(){
+        window.history.replaceState(null, '', 'http://127.0.0.1:81/overview/Engels?') 
+    }, false);
+    werkplaats_form.addEventListener('submit', function(){
+        window.history.replaceState(null, '', 'http://127.0.0.1:81/overview/Werkplaats?') 
+    }, false);
+    databases_form.addEventListener('submit', function(){
+        window.history.replaceState(null, '', 'http://127.0.0.1:81/overview/Databases?') 
+    }, false);
+    professionelevorming_form.addEventListener('submit', function(){
+        window.history.replaceState(null, '', 'http://127.0.0.1:81/overview/Professionele Vorming?') 
+    }, false);
+</script>
+
+
+    <!-- inspired by 'how to create an animated calender' on https://www.educative.io/answers/how-to-create-an-animated-calendar-with-html-and-css -->
+
+
+    <div class="grid-container">
+        <div class="calender">
+            <div class="calender-header">
+                <span class="month-picker" id="month-picker">February</span>
+                <div class="year-picker">
+                    <span class="year-change" id="prev-year">
+                        <pre><</pre>
+                    </span>
+                    <span id="year">2023</span>
+                    <span class="year-change" id="next-year">
+                        <pre>></pre>
+                    </span>
+                </div>
+            </div>
+            <div class="calendar-body">
+                <div class="calendar-week-day">
+                    <div>Zo</div>
+                    <div>Ma</div>
+                    <div>Di</div>
+                    <div>Wo</div>
+                    <div>Do</div>
+                    <div>Vr</div>
+                    <div>Za</div>
+                </div>
+                <div class="calendar-days"></div>
+            </div>
+            <div class="month-list"></div>
+        </div>
+        <div class="lesson-list">
+            <!-- Display all items in the table. -->
+            <div class="table-items">
+                {% for item in data %}  
+                    <div onclick="goToLink('{{item[0]}}')" class="table-item" id="{{item[0]}}" data-id="{{item[0]}}">
+                        {% for part in item %}
+                            <!-- check for index 1 because this is the id -->
+                            {% if(loop.index == 1) %}
+                                <p>
+                                    <span class="item-id">ID:   
+                                        <span>{{ part }}</span> 
+                                    </span> 
+                                </p>
+                            {% else %}
+                                <p class="item-attribute {% if current_column==columns[loop.index-1] %} error {% endif %}" >
+                                    <strong>{{columns[loop.index-1]}}:</strong> 
+                                    {{ part }}
+                                </p>
+                            {% endif %}
+
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Inspired by https://www.sololearn.com/compiler-playground/W2CaKQvGTPU1/ -->
+
+        <div class="attendance-list">
+            <table rowspan="20px" padding="13px"  border="1px">
+              <tr>
+                <th>Studentnaam:</th>
+                <th>Aanwezig</th>
+                <th>Afwezig</th>
+                <th>Check-in tijd</th>
+              </tr>
+              <tr>
+                <td>Lucas Onclin</td>
+                <td>
+                  <label class="container">
+                    <input type="radio" name="1" value="Aanwezig">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+                <td>
+                  <label class="content">
+                    <input type="radio" name="1" value="Afwezig">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+                <td>
+                  <input type="time" id="time1">
+                </td>
+              </tr>
+              <tr>
+                <td>Falco Zandboer</td>
+                <td>
+                  <label class="container">
+                    <input type="radio" name="2" value="Aanwezig">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+                <td>
+                  <label class="content">
+                    <input type="radio" name="2" value="Afwezig">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+                <td>
+                  <input type="time" id="time2">
+                </td>
+              </tr>
+              <tr>
+                <td>Mattias Suijker</td>
+                <td>
+                  <label class="container">
+                    <input type="radio" name="3" value="Aanwezig">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+                <td>
+                  <label class="content">
+                    <input type="radio" name="3" value="Afwezig">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+                <td>
+                  <input type="time" id="time3">
+                </td>
+              </tr>
+
+                <td>John Doe</td>
+                <td>
+                  <label class="container">
+                    <input type="radio" name="4" value="Aanwezig">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+                <td>
+                  <label class="content">
+                    <input type="radio" name="4" value="Afwezig">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+                <td>
+                  <input type="time" id="time4">
+                </td>
+              </tr>
+                <td>Jane Doe</td>
+                <td>
+                  <label class="container">
+                    <input type="radio" name="5" value="Aanwezig">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+                <td>
+                  <label class="content">
+                    <input type="radio" name="5" value="Afwezig">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+                <td>
+                  <input type="time" id="time5">
+                </td>
+              </tr>
+
+                <td>Aron Euser</td>
+                <td>
+                  <label class="container">
+                    <input type="radio" name="6" value="Aanwezig">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+                <td>
+                  <label class="content">
+                    <input type="radio" name="6" value="Afwezig">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+                <td>
+                  <input type="time" id="time6">
+                </td>
+              </tr>
+
+                <td>Rick Snijders</td>
+                <td>
+                  <label class="container">
+                    <input type="radio" name="7" value="Aanwezig">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+                <td>
+                  <label class="content">
+                    <input type="radio" name="7" value="Afwezig">
+                    <span class="checkmark"></span>
+                  </label>
+                </td>
+                <td>
+                  <input type="time" id="time7">
+                </td>
+              </tr>
+
+            </table>
+            <button onclick="saveAttendance()">Save Attendance</button>
+          </div>
+
+
+    <script>
+        function saveAttendance() {
+            // Get the attendance data for each student
+            var lucasAttendance = document.querySelector("input[name='1']:checked").value;
+            var falcoAttendance = document.querySelector("input[name='2']:checked").value;
+            var mattiasAttendance = document.querySelector("input[name='3']:checked").value;
+            var lucasTime = document.getElementById("time1").value;
+            var falcoTime = document.getElementById("time2").value;
+            var mattiasTime = document.getElementById("time3").value
+          
+            // Alert the user that the attendance data has been saved
+            alert("Attendance saved!");
+    }
+    </script>
+                        
+            
+
+
+
+        </div>
+    </div>
+
+    <script>
+
+        
+        // calendar overview page
+
+        let calendar = document.querySelector('.calender')
+
+        const month_names = ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December']
+
+        function isLeapYear(year) {
+            return (year % 4 === 0 && year % 100 !== 0 && year % 400 !== 0) || (year % 100 === 0 && year % 400 === 0)
+        }
+
+        function getFebDays(year) {
+            return isLeapYear(year) ? 29 : 28
+        }
+
+        function generateCalendar(month, year) {
+
+            let calendar_days = calendar.querySelector('.calendar-days')
+            let calendar_header_year = calendar.querySelector('#year')
+
+            let days_of_month = [31, getFebDays(year), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+            calendar_days.innerHTML = ''
+
+            let currentDate = new Date()
+            if (month > 11 || month < 0) month = currentDate.getMonth()
+            if (!year) year = currentDate.getFullYear()
+
+            let current_month = `${month_names[month]}`
+            month_picker.innerHTML = current_month
+            calendar_header_year.innerHTML = year
+
+            // get first day of the month
+
+            let first_day = new Date(year, month, 1)
+
+            for (let i = 0; i <= days_of_month[month] + first_day.getDay() - 1; i++) {
+                let day = document.createElement('div')
+                if (i >= first_day.getDay()) {
+                    day.classList.add('calendar-day-hover')
+                    day.innerHTML = i - first_day.getDay() + 1
+                    day.innerHTML += `<span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>`
+                    if (i - first_day.getDay() + 1 === currentDate.getDate() && year === currentDate.getFullYear() && month === currentDate.getMonth()) {
+                        day.classList.add('curr-date')
+                    }
+
+                }
+                calendar_days.appendChild(day)
+            }
+        }
+
+        let month_list = calendar.querySelector('.month-list')
+
+        month_names.forEach((e, index) => {
+            let month = document.createElement('div')
+            month.innerHTML = `<div data-month="${index}">${e}</div>`
+            month.querySelector('div').onclick = () => {
+                month_list.classList.remove('show')
+                current_month.value = index
+                generateCalendar(index, current_year.value)
+            }
+            month_list.appendChild(month)
+        })
+
+        let month_picker = calendar.querySelector('#month-picker')
+
+        month_picker.onclick = () => {
+            month_list.classList.add('show')
+        }
+
+        let currentDate = new Date()
+
+        let current_month = { value: currentDate.getMonth() }
+        let current_year = { value: currentDate.getFullYear() }
+
+        generateCalendar(current_month.value, current_year.value)
+
+        document.querySelector('#prev-year').onclick = () => {
+            --current_year.value
+            generateCalendar(current_month.value, current_year.value)
+        }
+
+        document.querySelector('#next-year').onclick = () => {
+            ++current_year.value
+            generateCalendar(current_month.value, current_year.value)
+        }
+    </script>
+
+    <script>
+        function goToLink(id) {
+        // window.location.href = "http://127.0.0.1:5000/";
+        window.location.href = "/checkin?id=" + id;
+        }
+
+        var elements = document.getElementsByClassName("table-item");
+        var modal = document.getElementById('modal-content')
+        var current_table = '{{current_table}}';
+        var dataArray = [];
+
+		var myFunction = function() {
+            var attribute = this.getAttribute("data-id");
+            modal.style.display = 'block';
+            document.getElementById('modal-content').style.display = "block";
+            // Add active class to modal for animation
+            document.getElementById('modal-content').classList.add("active");
+            console.log(attribute);
+            $.ajax({
+                type: "GET",
+                url: "/getitem",
+                data: {id : attribute, table : current_table},
+                success: function (res) {
+                    if(current_table == 'teacher'){
+
+                    }
+                    else if(current_table == 'student'){
+
+
+                    }else if(current_table == 'class'){
+
+                    }
+                },
+                error: function (res, options, error) {
+                    console.log(res.status);
+                    console.log(error);
+                    console.log(options);
+                }
+            });
+        };
+
+
+
+
+    </script>
+
+    <script>
+                // Get all buttons with the class "my-button"
+        const buttons = document.querySelectorAll(".my-button");
+
+        // Add event listener to each button
+        buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+            // Remove "clicked" class from all buttons
+            buttons.forEach((btn) => {
+            btn.classList.remove("clicked");
+            });
+            // Add "clicked" class to the clicked button
+            button.classList.add("clicked");
+        });
+    });
+    </script>
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+{% block title %}
+	<title>Hogeschool Checkin</title>
+{% endblock %}
+{% block content %}
+<head>
+	<link rel="stylesheet" href="/static/table.css" type="text/css">
+</head>
+    <!-- partial:index.partial.html -->
+    <h1></h1>
+<div class="table_div">
+    <table>
+      <thead>
+        <tr>
+          <th>Naam
+          <th>reden van afwezigheid
+          <th>Aanwezig ja/nee
+      </thead>
+      <tbody>
+        
+      </tbody>
+    </table>
+</div>    
+    <script>
+        var meeting_id = new URLSearchParams(window.location.search).get("id");
+        fetch_course(meeting_id);
+        
+        function fetch_course(meeting_id){
+            fetch(`/course/${meeting_id}`)
+            .then(response => response.json())
+            .then(data => {
+                const courseName = data[0];
+                const h1Element = document.querySelector('h1');
+                h1Element.textContent = courseName;
+            });
+            fetch_students(meeting_id);
+        
+        // function fetch_class_id(meeting_id){
+        //     fetch(`/groups/${meeting_id}`)
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         data.forEach(group => {
+        //             fetch_students(group);
+        //     });
+        //     });
+        // }
+        function fetch_students(meeting_id){
+            fetch(`/groups/${meeting_id}`)
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('tbody');
+                tableBody.innerHTML = ''; // clear table body before adding new data
+        
+                data.forEach(student => {
+                const row = document.createElement('tr');
+                
+                const nameCell = document.createElement('td');
+                nameCell.textContent = student.first_name + ' ' + student.last_name;
+                row.appendChild(nameCell);
+                
+                fetch(`/is_present/${meeting_id}/${student.id}`)
+                .then(response => response.json())
+                .then(data => {
+                    const presentCell = document.createElement('td');
+                    presentCell.textContent = data[0] ? 'ja' : 'nee';
+                    row.appendChild(presentCell);
+                });
+                
+                const reasonCell = document.createElement('td');
+                reasonCell.textContent = student.absence_reason || '-';
+                row.appendChild(reasonCell);
+                
+                tableBody.appendChild(row);
+        });
+            });
+        }
+            
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+{% block title %}
+	<title>Hogeschool Checkin</title>
+{% endblock %}
+{% block content %}
+	<!-- Popup for creating a new student. Handled in the script at the bottom of this page. -->
+	<div id="popup-create-student" class="modal"></div>
+	<div id="modal-create-student" class="modal-content">
+		<span id="close-create-student" class="close">&times;</span>
+		<form action="/createstudent" method="POST" autocomplete="off"> 
+			<h2>Nieuwe student</h2>
+			<input type="hidden" id="id" name="id" value="">
+			<p>Voornaam</p>
+			<input type="text" id="first_name" name="first_name" placeholder="John" maxlength="50"><br><br>
+			<p>Achternaam</p>
+			<input type="text" id="last_name" name="last_name" placeholder="Doe" maxlength="100"><br><br>
+			<p>Wachtwoord</p>
+			<input type="password" id="password" name="password" placeholder="Wachtwoord" maxlength="50"><br>
+			<input type="submit" id="button-red" class="button-red" value="Aanmaken" class="submit">
+		</form>
+	</div>
+
+	<!-- Popup for creating a new teacher. Handled in the script at the bottom of this page. -->
+	<div id="popup-create-teacher" class="modal"></div>
+	<div id="modal-create-teacher" class="modal-content">
+		<span id="close-create-teacher" class="close">&times;</span>
+		<form action="/createteacher" method="POST" autocomplete="off"> 
+			<h2>Nieuwe docent</h2>
+			<input type="hidden" id="id" name="id" value="">
+			<p>Voornaam</p>
+			<input type="text" id="first_name" name="first_name" placeholder="Jane" maxlength="50"><br><br>
+			<p>Achternaam</p>
+			<input type="text" id="last_name" name="last_name" placeholder="Doe" maxlength="100"><br><br>
+			<p>Wachtwoord</p>
+			<input type="password" id="password" name="password" placeholder="Wachtwoord" maxlength="50"><br>
+			<input type="submit" id="button-red" class="button-red" value="Aanmaken" class="submit">
+		</form>
+	</div>
+
+
+	<div>
+		<ul>
+			<li>
+				<div class="w3-container" style="padding: bottom 0.6rem;">
+					<div class="w3-card-4" style="width:10%; height:10%; padding: 10px; border-radius: 25px;">
+						<!-- "https://www.flaticon.com/free-icons/calendar" || Calendar icons created by photo3idea_studio -->
+						<img src="static/images/calendar.png" alt="Schedule" style="width:100%">
+						<div class="w3-container w3-center">
+							<p>Schedule</p>
+					  	</div>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<button type="button" class="button-red" id="open-create-student">Student Toevoegen</button>
+	<button type="button" class="button-red" id="open-create-teacher">Docent Toevoegen</button>
+
+	<script>
+		// Defines various elements on this page as easy to use variables.
+		var create_student_btn = document.getElementById("open-create-student");
+		var create_teacher_btn = document.getElementById("open-create-teacher");
+		var popup_create_student = document.getElementById("popup-create-student");
+		var popup_create_teacher = document.getElementById("popup-create-teacher");
+
+		// Called when clicking on the button to create a new student. Shows the respective popup.
+		var show_create_student = function(){
+			popup_create_student.style.display = "block";
+			document.getElementById('modal-create-student').style.display = "block";
+			document.getElementById('modal-create-student').classList.add("active");
+		};
+
+		// Called when clicking on the button to create a new student. Shows the respective popup.
+		var show_create_teacher = function(){
+			popup_create_teacher.style.display = "block";
+			document.getElementById('modal-create-teacher').style.display = "block";
+			document.getElementById('modal-create-teacher').classList.add("active");
+		};
+
+		// Called when trying to close a popup, or clicking off of a popup. Closes said pop-up.
+		close = function() {
+			popup_create_student.style.display = "none";
+			popup_create_teacher.style.display = "none";
+			document.getElementById('modal-create-student').style.display = "none";
+			document.getElementById('modal-create-teacher').style.display = "none";
+		};
+
+		// Add a listener to check if a button has been pressed. Shows the respective popup or alert if that happens.
+		create_student_btn.addEventListener('click', show_create_student, false);
+		create_teacher_btn.addEventListener('click', show_create_teacher, false);
+
+		// Adds listeners to check if the user is trying to close a popup and calls the close function if they are.
+		document.getElementById("close-create-student").addEventListener('click', close);
+		document.getElementById("popup-create-student").addEventListener('click', close);
+		document.getElementById("close-create-teacher").addEventListener('click', close);
+		document.getElementById("popup-create-teacher").addEventListener('click', close);
+	</script>
+{% endblock %}

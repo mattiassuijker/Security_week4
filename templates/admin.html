@@ -1,0 +1,193 @@
+{% extends "layout.html" %}
+{% block stylesheet %}
+<link rel="stylesheet" href="/static/admin.css" type="text/css">
+{% endblock %}
+
+{% block content %}
+	<section class="top-section">
+		<h1 class="page-header">Tabel kiezen:</h1>
+		<form action="/data" class="top-search-form" method="GET">
+
+		</form>
+
+		<!-- Popup for editing a user account. Handled in the script at the bottom of this page. -->
+		<div id="popup-update" class="modal"></div>
+		<div id="modal-update" class="modal-content">
+			<span id="close-update" class="close">&times;</span>
+			<form action="/edituser" method="POST" autocomplete="off"> 
+				<h2>ID: <span id="text-gebruiker"></span> </h2>
+				<input type="hidden" id="id" name="id" value="">
+				<input type="hidden" id="update-table" name="update-table" value="">
+				<p>Voornaam</p>
+				<input type="text" id="first_name" name="first_name" value="" maxlength="50"><br><br>
+				<p>Achternaam</p>
+				<input type="text" id="last_name" name="last_name" value="" maxlength="100"><br><br>
+				<p>Wachtwoord</p>
+				<input type="password" id="password" name="password" value="" maxlength="50"><br>
+				<input type="submit" class="edit-btn" value="Edit">
+			</form>
+
+			<!-- Button for deleting the selected user. -->
+			<form action="/deleteuser" method="POST">
+				<input type="hidden" name="id" id="delete-id"> 
+				<input type="hidden" name="delete-table" id="delete-table"> 
+				<input type="submit" class="danger-btn" value="Verwijderen">
+			</form>
+		</div>
+
+		<div class="table-select">
+			<div class="grid-container">
+				<div class="grid-item">
+					<form id="teacher-selector-form" >
+						<input type="submit" id="teacher-selector-btn" class="big-btn" value="Docent">
+					</form>
+				</div>
+
+				<div class="grid-item">
+					<form id="student-selector-form" >
+						<input type="submit" id="student-selector-btn" class="big-btn" value="Student">
+					</form>
+					<button type="button" class="button-red-center" id="open-create">Item Toevoegen</button>
+				</div>
+
+				<div class="grid-item">
+					<form id="class-selector-form" >
+						<input type="submit" id="class-selector-btn" class="big-btn" value="Class">
+					</form>
+				</div>
+			</div>
+		</div>
+	
+		<div class="admin-list">
+			<!-- Display all items in the table. -->
+			<div class="table-items">
+				{% for item in data %}  
+					<div class="table-item" id="{{item[0]}}" data-id="{{item[0]}}">
+						{% for part in item %}
+							<!-- check for index 1 because this is the id -->
+							{% if(loop.index == 1) %}
+								<p>
+									<span class="item-id">ID:   
+										<span>{{ part }}</span> 
+									</span> 
+								</p>
+							{% else %}
+								<p class="item-attribute {% if current_column==columns[loop.index-1] %} error {% endif %}" >
+									<strong>{{columns[loop.index-1]}}:</strong> 
+									{{ part }}
+								</p>
+							{% endif %}
+
+						{% endfor %}
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+		
+
+	</section>
+	<script>
+		var elements = document.getElementsByClassName("table-item");
+        var popup = document.getElementById("popup");
+        var modal = document.getElementById('modal-content');
+		var popup_update = document.getElementById("popup-update");
+        var current_table = '{{table}}';
+        var dataArray = [];
+
+		var teacher_selector_form = document.getElementById("teacher-selector-form");
+		var student_selector_form = document.getElementById("student-selector-form");
+		var class_selector_form = document.getElementById("class-selector-form");
+
+		var show_inspect = function() {
+			console.log('current table = ' + current_table)
+            var attribute = this.getAttribute("data-id");
+			if(current_table == 'class'){
+				popup_class.style.display = "block";
+				document.getElementById('modal-update-class').style.display = "block";
+				document.getElementById('modal-update-class').classList.add("active");
+			}
+			else{
+				popup_update.style.display = "block";
+				document.getElementById('modal-update').style.display = "block";
+				document.getElementById('modal-update').classList.add("active");
+			}
+            console.log('id = ' + attribute);
+            $.ajax({
+                type: "GET",
+                url: "/getitem",
+                data: {id : attribute, table : current_table},
+                success: function (res) {
+                    if(current_table == 'teacher'){
+						document.getElementById("id").value = res[0];
+						document.getElementById("update-table").value = current_table;
+						document.getElementById("first_name").value = res[1];
+						document.getElementById("last_name").value = res[2];
+						document.getElementById("delete-id").value = res[0];
+						document.getElementById("delete-table").value = current_table;
+						document.getElementById("text-gebruiker").innerHTML = res[0]
+                    }
+                    else if(current_table == 'student'){
+						document.getElementById("id").value = res[0];
+						document.getElementById("update-table").value = current_table;
+						document.getElementById("first_name").value = res[2];
+						document.getElementById("last_name").value = res[3];
+						document.getElementById("delete-id").value = res[0];
+						document.getElementById("delete-table").value = current_table;
+						document.getElementById("text-gebruiker").innerHTML = res[0]
+					}
+					else if(current_table == 'class'){
+						document.getElementById("id").value = res[0];
+						document.getElementById("class_shorthand").value = res[1];
+						document.getElementById("class_name").value = res[2];
+						document.getElementById("delete-id").value = res[0];
+						document.getElementById("text-gebruiker").innerHTML = res[0]
+                    }
+                },
+                error: function (res, options, error) {
+                    console.log(res.status);
+                    console.log(error);
+                    console.log(options);
+                }
+            });
+        };
+
+		// Called when trying to close a popup, or clicking off of a popup. Closes said pop-up.
+		close = function() {
+			popup_update.style.display = "none";
+			document.getElementById('modal-update').style.display = "none";
+		};
+
+		// Called when trying to edit the main admin account. Displays an alert, as this account may not be edited.
+		var show_protected = function() {
+            alert("This user cannot be modified due to security reasons. If you still wish to modify this user, please contact your database administrator.");
+		};
+
+		// Add listeners to check if a button or item has been pressed. Shows the respective popup or alert if that happens.
+		if(current_table == 'teacher'){
+			elements[0].addEventListener('click', show_protected, false);
+			for (var i = 1; i < elements.length; i++) {
+				elements[i].addEventListener('click', show_inspect, false);
+			}
+		}
+		else{
+			for (var i = 0; i < elements.length; i++) {
+				elements[i].addEventListener('click', show_inspect, false); 
+			}
+		}
+
+		teacher_selector_form.addEventListener('submit', function(){
+			window.history.replaceState(null, '', 'http://127.0.0.1:81/admin/teacher?')
+		}, false);
+		student_selector_form.addEventListener('submit', function(){
+			window.history.replaceState(null, '', 'http://127.0.0.1:81/admin/student?')
+		}, false);
+		class_selector_form.addEventListener('submit', function(){
+			window.history.replaceState(null, '', 'http://127.0.0.1:81/admin/class?')
+		}, false);
+
+		// Adds listeners to check if the user is trying to close a popup and calls the close function if they are.
+		document.getElementById("close-update").addEventListener('click', close);
+		document.getElementById("popup-update").addEventListener('click', close);
+	</script>
+
+{% endblock %}

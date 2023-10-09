@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+{% block title %}
+	<title>Hogeschool Checkin</title>
+{% endblock %}
+{% block content %}
+    <!-- <label for="code">Enter the class code:</label>
+    <input type="text" id="code" name="code" placeholder="Enter code here"> -->
+    <form id="set-present-form">    
+        <input type="hidden" name="meeting_id" value="">
+        <label style="width: 140px; height: 60px; text-align: center; font-size: 16px; padding: 10px;" for="student">studenten</label>
+        <select style="width: 140px; height: 60px; text-align: center; font-size: 16px; padding: 10px;" name="student_number" id="student">
+        </select>
+        <button type="submit">Click to mark as Present</button>
+    </form>
+
+    <script>
+        const select = document.getElementById('student');
+        group_list = []
+        
+        var meeting_id = new URLSearchParams(window.location.search).get("id");
+
+        const idInput = document.querySelector('input[name="meeting_id"]');
+		idInput.value = meeting_id;
+
+        const form = document.getElementById('set-present-form');
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+            fetch('/set_student_present', {
+            method: 'POST',
+            body: formData
+            });
+            alert("Jij bent aanwezig gezet!");
+            var id = new URLSearchParams(window.location.search).get("id");
+            window.location.href = "/present?id=" + id;
+
+        });
+
+        fetch_students(meeting_id);
+        
+        // function fetch_class_id(meeting_id){
+        //     fetch(`/groups/${meeting_id}`)
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         data.forEach(group => {
+        //             fetch_students(group);
+        //     });
+        //     });
+        // }
+        function fetch_students(meeting_id){
+            fetch(`/groups/${meeting_id}`)
+            .then(response => response.json())
+            .then(data => {
+                select.innerHTML = '';
+                data.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.student_number;
+
+                option.textContent = student.first_name;
+                select.appendChild(option);
+            });
+            });
+        }
+        
+        // const codeInput = document.getElementById('code');
+        // const list = document.getElementById('student_list');
+
+        // codeInput.addEventListener('keyup', function(event) {
+        // for (let i = 0; i < group_list.length; i++) {
+        //     if (event.target.value === group_list[i]) {
+                
+        //         list.style.display = 'block';
+        //     }
+        // }   
+        // });
+    </script>
+    
+{% endblock %}

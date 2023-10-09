@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	{% block title %}{% endblock %}
+  <link rel="stylesheet" href="/static/overview-2.0.css" type="text/css">
+	<link rel="stylesheet" href="/static/site.css" type="text/css">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	{% block stylesheet %}{% endblock %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins:wght@200&family=Roboto+Condensed&family=Roboto+Mono:wght@100;400&family=Space+Mono&display=swap"
+		rel="stylesheet">
+</head>
+
+<body>
+	<header>
+		<ul class="nav-bar">
+			<div class="logo-box"><img class="nav-logo" src="https://login.hr.nl/v1/assets/svg/logo/logo.svg" alt=""></div>
+			<li><a href="/">Home</a> </li>
+			<li><a href="/schedule">Rooster</a></li>
+      		<li><a href="/overview/Nederlands">Overzicht</a></li>
+			{% if session['isAdmin'] == 1 %}
+				<li><a href="/admin">Admin</a></li>
+			{% endif %}
+			{% if session['loggedin'] == True %}
+				<a class="button-red" href="/logout">Uitloggen</a>
+			{% else %}
+				<a class="button-red" href="/login" style="margin-right: 5px;">Inloggen</a>
+			{% endif %}
+		</ul>
+	</header>
+	<main>
+		{% block content %}{% endblock %}
+	</main>
+	<div class="c-footer" style="text-align: center;">
+		<div class="footer__container">
+			<p>&copy; 2023 Code Wizards</p>
+		</div>
+	</div>
+</body>
+
+</html>
